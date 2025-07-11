@@ -13,10 +13,9 @@ class Jio_ftdi:
             capture_output=True,
             text=True
             )
-            LogHandler.log(111)
-            LogHandler.log("標準輸出：", result.stdout)
-            LogHandler.log("標準錯誤：", result.stderr)
-            LogHandler.log("回傳碼：", result.returncode)
+            LogHandler.log(f"標準輸出： {result.stdout}")
+            LogHandler.log(f"標準錯誤： {result.stderr}")
+            LogHandler.log(f"回傳碼： {result.returncode}")
         except Exception as e:
             LogHandler.log(f"Error BFIC channel_setting")
         
@@ -27,10 +26,9 @@ class Jio_ftdi:
             capture_output=True,
             text=True
             )
-            LogHandler.log(111)
-            LogHandler.log("標準輸出：", result.stdout)
-            LogHandler.log("標準錯誤：", result.stderr)
-            LogHandler.log("回傳碼：", result.returncode)
+            LogHandler.log(f"標準輸出： {result.stdout}")
+            LogHandler.log(f"標準錯誤： {result.stderr}")
+            LogHandler.log(f"回傳碼： {result.returncode}")
         except Exception as e:
             LogHandler.log(f"Error for BFIC diable all")
         
@@ -42,10 +40,9 @@ class Jio_ftdi:
             capture_output=True,
             text=True
             )
-            LogHandler.log(111)
-            LogHandler.log("標準輸出：", result.stdout)
-            LogHandler.log("標準錯誤：", result.stderr)
-            LogHandler.log("回傳碼：", result.returncode)
+            LogHandler.log(f"標準輸出： {result.stdout}")
+            LogHandler.log(f"標準錯誤： {result.stderr}")
+            LogHandler.log(f"回傳碼： {result.returncode}")
         except Exception as e:
             LogHandler.log(f"Error UDIC attenuator Tx setting")
     
@@ -56,10 +53,9 @@ class Jio_ftdi:
             capture_output=True,
             text=True
             )
-            LogHandler.log(111)
-            LogHandler.log("標準輸出：", result.stdout)
-            LogHandler.log("標準錯誤：", result.stderr)
-            LogHandler.log("回傳碼：", result.returncode)
+            LogHandler.log(f"標準輸出： {result.stdout}")
+            LogHandler.log(f"標準錯誤： {result.stderr}")
+            LogHandler.log(f"回傳碼： {result.returncode}")
         except Exception as e:
             LogHandler.log(f"Error UDIC attenuator Tx setting")
 
@@ -70,9 +66,8 @@ class Jio_ftdi:
             capture_output=True,
             text=True
             )
-            LogHandler.log(111)
-            LogHandler.log("標準輸出：", result.stdout)
-            LogHandler.log("標準錯誤：", result.stderr)
-            LogHandler.log("回傳碼：", result.returncode)
+            LogHandler.log(f"標準輸出： {result.stdout}")
+            LogHandler.log(f"標準錯誤： {result.stderr}")
+            LogHandler.log(f"回傳碼： {result.returncode}")
         except Exception as e:
             LogHandler.log(f"Error UDIC attenuator Tx setting")

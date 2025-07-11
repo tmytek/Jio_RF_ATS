@@ -3,7 +3,8 @@ import datetime
 import time
 import flet as ft
 import os
-from test_sequency import test_seq
+#from test_sequency import test_seq
+from test_sequency_AI import test_seq
 from fileHandler import FileHandler
 from logHandler import LogHandler
 from os import listdir
@@ -15,14 +16,14 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
     page.theme_mode = ft.ThemeMode.DARK
     page.window_width = 850
-    page.window_height = 1100
+    page.window_height = 1000
     page.window_center()
     page.window_resizable = False
 
     # ---------------- Constants ----------------
     CELL_HEIGHT = 50
     HEADER_HEIGHT = 50
-    DISPLAY_WINDOW_SIZE = 12
+    DISPLAY_WINDOW_SIZE = 10
 
     column_widths = {
         "main": 200,
@@ -112,7 +113,7 @@ def main(page: ft.Page):
 
         # Initialize the filename with current date and time
         today = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=8)))       
-        tmp_time = f'{e.control.value}_{today.strftime("%Y%m%d-%H%M%S")}'
+        tmp_time = f'{input_text}_{today.strftime("%Y%m%d-%H%M%S")}'
         tmp_path = f'{os.getcwd()}/log/Jio_L2_RF'
         isExist = os.path.exists(tmp_path)
         if not isExist:
@@ -122,7 +123,6 @@ def main(page: ft.Page):
         try: 
             main_seq = test_seq()
             test_result = main_seq.initialize(list_view, all_data, build_row, DISPLAY_WINDOW_SIZE)
-            print(f"test_result = {test_result}")
             LogHandler.log(f"-------------------------------------------------------------------------------------------------------")
             LogHandler.log(f"test_result = main_seq.initialize = {test_result}")
             #for i in range(1, 101):
@@ -164,7 +164,14 @@ def main(page: ft.Page):
         text_field.focus()
 
     # ---------------- UI Controls ----------------
-    status_text = ft.Text("Hello", color=ft.colors.CYAN_200, size=100)
+    #status_text = ft.Text("Hello", color=ft.colors.CYAN_200, size=100, weight="bold", text_align=ft.TextAlign.CENTER)
+    status_text = ft.Text(
+        "Hello",
+        color=ft.colors.CYAN_200,
+        size=100,
+        weight="bold",
+        text_align=ft.TextAlign.CENTER
+    )
     text_field = ft.TextField(
         label="Enter SN with Barcode Scanner!!",
         on_submit=on_text_change,
@@ -178,7 +185,7 @@ def main(page: ft.Page):
         content=ft.Container(
             content=ft.Column(
                 controls=[
-                    status_text,
+                    ft.Row([status_text], alignment=ft.MainAxisAlignment.CENTER),
                     text_field
                 ],
                 spacing=10
@@ -204,7 +211,7 @@ def main(page: ft.Page):
                         scroll=ft.ScrollMode.ALWAYS
                     ),
                     ft.Container(
-                        height=650,
+                        height=550,
                         content=list_view,
                         expand=False,
                         border=ft.border.only(bottom=ft.BorderSide(2, ft.colors.GREY_700))

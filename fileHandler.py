@@ -19,19 +19,4 @@ class FileHandler:
         
         print(f'Save {fileName} file!')
 
-    @classmethod
-    def copyFileFromNaToLocal(cls, fileToLocalPath:str):
-
-        try:
-            funcName = 'copyFileFromNaToLocal()'
-
-            time.sleep(0.1)
-
-            fileFromNa = fileToLocalPath.split('/')[-1]
-
-            shutil.copyfile(f'{NA.getNaRootPath()}\{fileFromNa}', fileToLocalPath)
-            # shutil.copy(src, dst)
-            # shutil.copyfile(f'{os.getcwd()}/measureReport/AAA.txt', f'{naSaveFileRemotePath}/AAA.txt', follow_symlinks=True)
-        except Exception as e:
-            msg = f'[{cls.fileName}][{cls.className}][{funcName}][copy file NA to local PC][exception] {e}'
-            print(msg); #LogHandler.log(msg, 'error')
+ 
