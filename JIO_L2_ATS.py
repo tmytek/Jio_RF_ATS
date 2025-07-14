@@ -34,8 +34,7 @@ def main(page: ft.Page):
         "result": 80
     }
 
-    all_data = []
-    all_data.append(["main_test_item_name", "sub_test_item_name", "lower_limit", "test_value", "upper_limit", "result"])
+    
     list_view = ft.ListView(
         spacing=0,
         expand=True,
@@ -93,6 +92,9 @@ def main(page: ft.Page):
 
     # ---------------- Event Handler ----------------
     def on_text_change(e):
+        all_data = []
+        all_data.append(["main_test_item_name", "sub_test_item_name", "lower_limit", "test_value", "upper_limit", "result"])
+
         text_field.autofocus = False
         input_text = e.control.value
         start_time = time.time()
