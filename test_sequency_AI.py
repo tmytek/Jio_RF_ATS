@@ -1,27 +1,7 @@
+import configparser
 from logHandler import LogHandler
 
 class test_seq:
-    # 集中管理參數
-    EVM_LIMITS = {
-        'tx_h_ch': (-90, -10),
-        'tx_v_ch': (-91, -11),
-        'rx_h_ch': (-92, -12),
-        'rx_v_ch': (-93, -13),
-        'tx_h_all': (-98, -18),
-        'tx_v_all': (-99, -19),
-        'rx_h_all': (-999, -9),
-        'rx_v_all': (-998, -8),
-    }
-    POWER_LIMITS = {
-        'tx_h_ch': (-94, -14),
-        'tx_v_ch': (-95, -15),
-        'rx_h_ch': (-96, -16),
-        'rx_v_ch': (-97, -17),
-        'tx_h_all': (-997, -7),
-        'tx_v_all': (-996, -6),
-        'rx_h_all': (-995, -5),
-        'rx_v_all': (-994, -4),
-    }
     USER_MARGIN = {
         'tx_ch': 5,
         'rx_ch': 10,
@@ -29,10 +9,38 @@ class test_seq:
         'rx_all': 10
     }
 
-    def __init__(self):
+    def __init__(self, config_path='testconfig.ini'):
         self.all_data = []
         self.display_limit = 12
         self.list_view = None
+
+        # 讀取 config.ini
+        self.config = configparser.ConfigParser()
+        self.config.read(config_path)
+        self.EVM_LIMITS = self._parse_limits('EVM_LIMITS')
+        print(f"self.EVM_LIMITS : {self.EVM_LIMITS}")
+        self.POWER_LIMITS = self._parse_limits('POWER_LIMITS')
+        print(f"self.POWER_LIMITS : {self.POWER_LIMITS}")
+
+        # 讀取儀器連線參數
+        self.psw_address = self.config.get('INSTRUMENT', 'psw_address', fallback='ASRL6::INSTR')
+        print(f"self.psw_address : {self.psw_address}")
+        self.daq_address = self.config.get('INSTRUMENT', 'daq_address', fallback='USB-4711A,BID#0')
+        print(f"self.daq_address : {self.daq_address}")
+        self.evm_address = self.config.get('INSTRUMENT', 'evm_address', fallback='TCPIP0::192.168.200.50::inst0::INSTR')
+        print(f"self.evm_address : {self.evm_address}")
+
+    def _parse_limits(self, section):
+        limits = {}
+        if section in self.config:
+            for key in self.config[section]:
+                val = self.config[section][key]
+                try:
+                    lower, upper = map(float, val.split(','))
+                    limits[key] = (lower, upper)
+                except Exception as e:
+                    LogHandler.log(f"Error parsing {section} for {key}: {e}")
+        return limits
 
     def log_and_update(self, item, all_data, list_view, build_row):
         all_data.append([item["main"], item["sub"], item["lower"], item["value"], item["upper"], item["result"]])
@@ -56,12 +64,12 @@ class test_seq:
             import PSW
             tmp_item = "PSW"
             self.psw = PSW.PSW()
-            tmp_result_psw = self.psw.INIT('ASRL6::INSTR')
+            tmp_result_psw = self.psw.INIT(self.psw_address)
             if tmp_result_psw:
                 import USB_4711A_JIO
                 tmp_item = "DAQ_4711A"
                 self.daq = USB_4711A_JIO.DAQ_4711()
-                tmp_result_4711 = self.daq.INIT()
+                tmp_result_4711 = self.daq.INIT(self.daq_address)
                 if tmp_result_4711:
                     import Dut_control
                     self.jio_ftdi = Dut_control.Jio_ftdi()
@@ -69,7 +77,7 @@ class test_seq:
                     tmp_item = "R&S_CMP180"
                     import RS_CMP180
                     self.evm_instrument = RS_CMP180.EVMInstrument()
-                    tmp_result_EVM = self.evm_instrument.INIT('TCPIP0::192.168.200.50::inst0::INSTR')
+                    tmp_result_EVM = self.evm_instrument.INIT(self.evm_address)
                     LogHandler.log(f"=======tmp_result_EVM : {tmp_result_EVM}")
 
             if tmp_result_EVM:
@@ -99,7 +107,6 @@ class test_seq:
             self.safe_shutdown()
             return False
 
-    # 通用測試區塊（但 channel_setting 參數寫死）
     def test_loop(self, mode, evm_key, power_key, user_margin, set_daq, set_dut, set_sg, all_data, list_view, build_row, set_channel, off_channel):
         set_daq()
         set_dut()
