@@ -12,7 +12,7 @@ from os.path import isfile, isdir
 
 def main(page: ft.Page):
     # ---------------- Page Setup ----------------
-    page.title = "JIO Function Test Bundle v1.0.0.0"
+    page.title = "JIO Function Test Bundle v1.1.0.0"
     page.scroll = ft.ScrollMode.AUTO
     page.theme_mode = ft.ThemeMode.DARK
     page.window_width = 850
