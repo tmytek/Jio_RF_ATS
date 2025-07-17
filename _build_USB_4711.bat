@@ -1,0 +1,1 @@
+pyinstaller --onefile Manual_GUI_Ken.py

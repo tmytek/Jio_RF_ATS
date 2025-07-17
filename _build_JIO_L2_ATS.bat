@@ -1,0 +1,1 @@
+pyinstaller --onefile JIO_L2_ATS.py

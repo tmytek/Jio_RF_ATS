@@ -4,7 +4,7 @@ from Automation.BDaq.BDaqApi import AdxEnumToString, BioFailed
 import time
 from logHandler import LogHandler
 
-deviceDescription = "USB-4711A,BID#0"
+#deviceDescription = "USB-4711A,BID#0"
 profilePath = u"USB-4711A.xml"
 
 # 初始的 do_states
@@ -17,8 +17,9 @@ class DAQ_4711:
     def __init__(self):
         pass
 
-    def INIT(self):
+    def INIT(self, deviceDescription):
         tmp_result = self.WriteDigital(deviceDescription, profilePath, do_states)
+        self.deviceDescription = deviceDescription
         time.sleep(1)
         return tmp_result
 
@@ -52,7 +53,7 @@ class DAQ_4711:
         """設置指定位置的數位輸出狀態並寫入"""
         global do_states
         do_states[index] = value  # 更新指定位置的值
-        self.WriteDigital(deviceDescription, profilePath, do_states)
+        self.WriteDigital(self.deviceDescription, profilePath, do_states)
 
 
     def set_Tx_H(self):
