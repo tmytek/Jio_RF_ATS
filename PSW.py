@@ -17,7 +17,7 @@ class PSW:
             # 列出所有可用的資源
 
             # 連接到 COM3 (請根據實際情況修改)
-            #inst = rm.open_resource('ASRL3::INSTR')
+            #inst = rm.open_resource('ASRL6::INSTR')
             self.inst = rm.open_resource(resource_str)
             # 設定通訊參數
             self.inst.baud_rate = 9600
@@ -61,7 +61,6 @@ class PSW:
         except Exception as e:
             LogHandler.log(f"[PSW : OUTP ON] Error: {e}")
             self.close()
-            # sys.exit(1)
     
     def SET_Power_OFF(self):
         """設定SG for RF Output OFF"""
@@ -74,7 +73,35 @@ class PSW:
         except Exception as e:
             LogHandler.log(f"[PSW : OUTP OFF] Error: {e}")
             self.close()
-            # sys.exit(1)
+    
+    def read_voltage_current(self):
+        """
+        讀取電壓與電流，回傳 (voltage, current) tuple
+        """
+        try:
+            response = self.inst.query("MEAS:ALL?")
+            # 預期格式: "+12.002,+0.000" voltage, current
+            parts = response.strip().split(",")
+            if len(parts) != 2:
+                LogHandler.log(f"[MEAS:ALL?] Unexpected response: {response}")
+                return None
+            #voltage = float(parts[0])
+            #current = float(parts[1])
+            if self.is_number_regex(float(parts[0])):
+                voltage = float(parts[0])
+            else:
+                voltage = -999
+            if self.is_number_regex(float(parts[1])):
+                current = float(parts[1])
+            else:
+                current = -999
+
+            LogHandler.log(f"[MEAS:ALL?] Voltage: {voltage} V, Current: {current} A")
+            return voltage, current
+        except Exception as e:
+            LogHandler.log(f"[MEAS:ALL?] Error: {type(e).__name__}: {e}")
+            self.close()
+            return None
     
     def is_number_regex(self, s):
         return bool(re.match(r'^-?\d+(\.\d+)?([eE][-+]?\d+)?$', s))
